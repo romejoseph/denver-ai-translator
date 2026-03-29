@@ -66,7 +66,7 @@ ${text}
 }
 
 client.once("ready", () => {
-  console.log(`🤖 AI Translator ready: ${client.user.tag}`);
+  console.log(`AI Translator ready: ${client.user.tag}`);
 });
 
 client.on("messageCreate", async (message) => {
@@ -96,7 +96,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
   const emoji = reaction.emoji.name;
 
-  if (!FLAG_LANG[emoji]) return;
+  if (!FLAG_LANG[emoji]) return reaction.message.reply(`Sorry, that language (${emoji}) isn't supported for translation. Please contact the admin to add it.`);
 
   const message = reaction.message;
 
