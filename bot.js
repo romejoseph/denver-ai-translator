@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { Client, GatewayIntentBits } = require("discord.js");
 const axios = require("axios");
+const { Ollama } = require("ollama");
 
 const client = new Client({
   intents: [
@@ -12,7 +13,7 @@ const client = new Client({
 });
 
 const MODEL = process.env.MODEL || "mistral";
-const OLLAMA_URL = process.env.OLLAMA_URL;
+const OLLAMA_URL = process.env.OLLAMA_URL || "https://ollama.com";
 const CHANNEL_LIMIT = process.env.TRANSLATE_CHANNEL || null;
 
 const FLAG_LANG = {
@@ -20,7 +21,21 @@ const FLAG_LANG = {
   "🇵🇭": "Filipino (Tagalog)",
   "🇲🇾": "Malay",
   "🇫🇷": "French",
+  "🇵🇱": "Polish",
+  "🇩🇪": "German",
+  "🇪🇸": "Spanish",
+  "🇮🇹": "Italian",
+  "🇷🇺": "Russian ",
+  "🇨🇳": "Chinese (Simplified)",
+  "🇧🇷": "Portuguese (Brazilian)",
 };
+
+const oll = new Ollama({
+  host: OLLAMA_URL,
+  headers: {
+    Authorization: "Bearer " + process.env.OLLAMA_API_KEY,
+  },
+});
 
 async function aiTranslate(text, targetLang) {
 
@@ -37,17 +52,12 @@ Message:
 ${text}
 `;
 
-    const res = await axios.post(
-      OLLAMA_URL,
-      {
-        model: MODEL,
-        prompt: prompt,
-        stream: false
-      },
-      { timeout: 20000 }
-    );
+    const response = await oll.chat({
+      model: MODEL,
+      messages: [{ role: 'user', content: prompt }],
+    });
 
-    return res.data.response.trim();
+    return response.message.content.trim();
 
   } catch (err) {
     console.error("AI translation error:", err.message);
