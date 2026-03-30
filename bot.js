@@ -91,7 +91,7 @@ client.once("ready", () => {
 });
 
 client.on("messageCreate", async (message) => {
-
+  console.debug(`Received message: ${message.content} (ID: ${message.id}) in channel ${message.channel.id} by ${message.author.tag}`);
   if (message.author.bot) return;
   if (!message.content.trim()) return;
 
@@ -112,7 +112,7 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageReactionAdd", async (reaction, user) => {
-
+  console.debug(`Reaction added: ${reaction.emoji.name} by ${user.tag} on message ID ${reaction.message.id}`);
   if (user.bot) return;
 
   const emoji = reaction.emoji.name;
