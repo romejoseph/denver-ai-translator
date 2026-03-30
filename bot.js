@@ -1,3 +1,16 @@
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 10000;
+
+// This gives Render something to "see" so it doesn't fail the deployment
+app.get('/', (req, res) => {
+  res.send('Bot is online!');
+});
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Web server listening on port ${port}`);
+});
+
 require("dotenv").config();
 const { Client, GatewayIntentBits } = require("discord.js");
 const axios = require("axios");
