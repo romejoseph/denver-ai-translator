@@ -16,6 +16,7 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const axios = require("axios");
 const { Ollama } = require("ollama");
 
+console.debug("Starting AI Translator bot...");
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -24,10 +25,15 @@ const client = new Client({
     GatewayIntentBits.MessageContent
   ]
 });
+console.debug("Discord client initialized with intents.");
 
 const MODEL = process.env.MODEL || "mistral";
 const OLLAMA_URL = process.env.OLLAMA_URL || "https://ollama.com";
 const CHANNEL_LIMIT = process.env.TRANSLATE_CHANNEL || null;
+
+console.debug(`Using model: ${MODEL}`);
+console.debug(`Ollama URL: ${OLLAMA_URL}`);
+console.debug(`Channel limit: ${CHANNEL_LIMIT ? CHANNEL_LIMIT : "None (all channels)"}`);
 
 const FLAG_LANG = {
   "🇺🇸": "English",
@@ -49,6 +55,8 @@ const oll = new Ollama({
     Authorization: "Bearer " + process.env.OLLAMA_API_KEY,
   },
 });
+
+console.debug("Ollama client initialized.");
 
 async function aiTranslate(text, targetLang) {
 
@@ -138,4 +146,6 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
 });
 
+console.debug("Logging in to Discord...");
 client.login(process.env.DISCORD_TOKEN);
+console.debug("Discord login initiated.");
