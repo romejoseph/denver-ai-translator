@@ -95,8 +95,13 @@ client.on("messageReactionAdd", async (reaction, user) => {
   if (user.bot) return;
 
   const emoji = reaction.emoji.name;
-
-  if (!FLAG_LANG[emoji]) return reaction.message.reply(`Sorry, that language (${emoji}) isn't supported for translation. Please contact the admin to add it.`);
+  const flagRegex = /[\u{1F1E6}-\u{1F1FF}]{2}/u;
+  if (!FLAG_LANG[emoji]) {
+    if (flagRegex.test(emoji)) {
+      return reaction.message.reply(`Sorry, that language (${emoji}) isn't supported for translation. Please contact the admin to add it.`);
+    }
+    return;
+  }
 
   const message = reaction.message;
 
